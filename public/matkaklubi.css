@@ -1,0 +1,109 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.paisSektsioon {
+    height: 778px;
+    width: 100%;
+    background-image: url('assets/Hills.png');
+    background-size: cover;
+    background-repeat: none;
+}
+
+.paislogo {
+    width: 66px;
+    height: 64px;
+}
+
+.paisNimi {
+    font-weight: 800;
+    font-size: 33px;
+    letter-spacing: 0px;
+    color: #0B0B0B;
+    opacity: 1;
+}
+
+.pais-menyy {
+    font-family: 'Montserrat', sans-serif;
+	font-size: 16.67px;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 2.67px;
+    margin-left: auto
+}
+
+.pais-menyy ul {
+    list-style-type: none;
+    justify-content: flex-end;
+}
+
+.pais-menyy li {
+    padding: 0px;
+    margin-left: 10px;
+    min-width: 100px;
+}
+
+.pais-menyy a {
+    color: #0B0B0B;
+}
+
+.rida {
+    display: flex;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    color: #0B0B0B;
+}
+
+.paisSektsioon-pealkirjad {
+    padding-top: 20px;
+}
+
+.paisSektsioon-pealkirjad h1,
+.paisSektsioon-pealkirjad h2,
+.paisSektsioon-pealkirjad h3 {
+   font-weight: 700;
+   letter-spacing: 0px;
+   color: #0B0B0B;
+}
+
+.paisSektsioon-pealkirjad h2 {
+   font-size: 39.57px;
+   line-height: 42.74px;
+}
+
+.paisSektsioon-pealkirjad h1 {
+   font-size: 74.39px;
+   line-height: 91px;
+}
+
+.paisSektsioon-pealkirjad h3 {
+   font-size: 20.83px;
+   line-height: 29.17px;
+}
+
+.liblikas2 {
+    width: 60px;
+    height: 32px;
+    margin-left: -60px;
+}
+
+.liblikas1 {
+    width: 75.27px;
+    height: 66.04px;
+    margin-top: -30px;
+
+}
+
+@media screen and (min-width: 992px) {
+    .paisSektsioon-pealkirjad {
+        padding-top: 231px;
+    }   
+}
+
+@media screen and (min-width: 1400px) {
+    .paisSektsioon {
+        background-image: url('assets/Hills@2x.png');
+        background-size: cover;
+        background-repeat: none;
+    }
+}
