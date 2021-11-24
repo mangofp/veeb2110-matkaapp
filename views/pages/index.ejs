@@ -54,7 +54,10 @@
                     <p>
                         <%= matkad[i].kirjeldus %>
                     </p>
-                    <a href="#" class="btn btn-primary">Registreeru</a>
+                    <p>
+                        Registreerunud osalejaid: <%= matkad[i].osalejad.length %>
+                    </p>
+                    <a href="/registreerumine/<%= i %>" class="btn btn-primary">Registreeru</a>
                 </div>
             </div> 
         <% } %>
