@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matkaklubi - registreerumine</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/matkaklubi.css">
+    <script src="kontakt.js"></script>
+</head>
+<body>
+<div class="container">
+    <%- include("../partials/menyy.ejs") %>
+    <h1>Registeeru matkale <%= matk.nimetus %></h1>
+    <img class="registreerumine-pilt" src="<%= matk.pildiUrl %>" alt="">
+    <p>
+        <%= matk.kirjeldus %>
+    </p>
+    <div class="row">
+        <form action="/kinnitus/<%= matk.id %>">
+            <div class="form-group">
+                <label for="nimi">Sinu nimi:</label>
+                <input type="text" class="form-control" id="nimi" name="nimi">
+            </div>
+            <div class="form-group">
+                <label for="email">Sinu email:</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="markus">Märkus:</label>
+                <textarea class="form-control" name="markus" id="markus" cols="30" rows="5"></textarea>
+            </div>
+            <button onclick="return saadaVorm()" class="btn btn-default">Saada</button>
+        </form>
+    </div>  
+</div>
+</body>
+
+</html>

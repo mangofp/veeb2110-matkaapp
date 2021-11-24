@@ -94,6 +94,19 @@ body {
 
 }
 
+img.registreerumine-pilt {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+img.uudis-pilt {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+
 @media screen and (min-width: 992px) {
     .paisSektsioon-pealkirjad {
         padding-top: 231px;
