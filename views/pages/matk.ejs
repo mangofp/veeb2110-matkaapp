@@ -21,11 +21,14 @@
 <body>
 <div class="container">
     <%- include("../partials/menyy.ejs") %>
-    <img class="uudis-pilt" src="<%= uudis.pildiUrl %>" alt="">
-    <h2><%= uudis.pealkiri %></h2>
-    <div class="yks-uudis">
-        <%- uudis.tekst %>
-    </div>
+    <h2>Mbatk: <%= matk.nimetus %></h2>
+
+    <h3>Osalejad:</h3>
+    <% for (let i = 0; i < matk.osalejad.length; i++ ) { %>
+        <div class="matk">
+            <%= matk.osalejad[i].nimi %>
+        </div>
+    <% } %>
  
 </div>
 </body>

@@ -8,6 +8,8 @@ const matk1 = {
   kirjeldus: "Lähme ja kõnnime kolm päeva looduses",
   pildiUrl: "/assets/matk_tartus1.jpg",
   osalejad: [],
+  kasNahtav: false,
+  kasRegistreeumineAvatud: true
 };
 const matk2 = {
   id: 1,
@@ -15,6 +17,8 @@ const matk2 = {
   kirjeldus: "Väntame iga päev 30 kilomeetrit",
   pildiUrl: "/assets/rattamatk.jpg",
   osalejad: [],
+  kasNahtav: true,
+  kasRegistreeumineAvatud: false
 };
 const matk3 = {
   id: 2,
@@ -22,6 +26,8 @@ const matk3 = {
   kirjeldus: "14 kilomeetrine jalutuskäik",
   pildiUrl: "/assets/matk_tartus1.jpg",
   osalejad: [],
+  kasNahtav: true,
+  kasRegistreeumineAvatud: true
 };
 const matk4 = {
   id: 3,
@@ -29,6 +35,8 @@ const matk4 = {
   kirjeldus: "14 kilomeetrine jalutuskäik",
   pildiUrl: "/assets/matk_tartus1.jpg",
   osalejad: [],
+  kasNahtav: true,
+  kasRegistreeumineAvatud: true
 };
 
 const matkad = [matk1, matk2, matk3, matk4];
@@ -45,7 +53,23 @@ let uudised = [
     id:1,
     pealkiri: "Uudis 2",
     kokkuvote: 'Lühike tekst',
-    tekst: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium quas dolore fugiat earum cum libero exercitationem fugit facere voluptatibus incidunt, illo iste eos. Facilis veritatis quos molestias dicta itaque rerum!",
+    tekst: `
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+      </p>
+      <p>
+        Laudantium quas dolore fugiat earum cum 
+        libero <strong>exercitationem fugit</strong> facere voluptatibus incidunt, 
+        illo iste eos. Facilis veritatis quos molestias dicta 
+      </p>
+      <h4>
+        Tavaline alapealkiri
+      </h4>
+      <p>
+        itaque rerum!
+      </p>  
+        `
+      ,
     pildiUrl: "/assets/syst1.jpg",
   },
   {
@@ -63,7 +87,7 @@ function registreerumiseKinnitus(req, res) {
       res.end("Emaili ei ole - registreerumine ebaõnnestus")
       return false
     }
-    
+
     const registreerumine = {
       nimi: req.query.nimi,
       email: req.query.email,
@@ -82,11 +106,24 @@ function naitaUudist(req, res) {
   res.render("pages/uudis", { uudis })
 }
 
+function matkNahtav(matk) {
+  return matk.kasNahtav
+}
+
+function naitaMatkad(req, res) {
+  const nahtavadMatkad = matkad.filter(matkNahtav)
+  res.render("pages/index", { matkad: nahtavadMatkad })
+}
+
+function tagastaMatkad(req, res) {
+  res.send(matkad)
+}
+
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.get("/", (req, res) => res.render("pages/index", { matkad }));
+app.get("/",naitaMatkad);
 app.get("/kontakt", (req, res) => res.render("pages/kontakt"));
 app.get("/uudised", (req, res) => res.render("pages/uudised", { uudised }));
 app.get("/registreerumine/:matkaId", 
@@ -97,5 +134,6 @@ app.get("/registreerumine/:matkaId",
 );
 app.get("/kinnitus/:matkaId", registreerumiseKinnitus)
 app.get("/uudis/:uudisIndeks", naitaUudist)
+app.get("/api/matk", tagastaMatkad)
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

@@ -57,7 +57,11 @@
                     <p>
                         Registreerunud osalejaid: <%= matkad[i].osalejad.length %>
                     </p>
-                    <a href="/registreerumine/<%= i %>" class="btn btn-primary">Registreeru</a>
+                    <% if (matkad[i].kasRegistreeumineAvatud ) { %>
+                        <a href="/registreerumine/<%= i %>" class="btn btn-primary">Registreeru</a>
+                    <% } else { %>
+                        <div class="alert alert-info">Registreerumine suletud</div>
+                    <% } %>
                 </div>
             </div> 
         <% } %>

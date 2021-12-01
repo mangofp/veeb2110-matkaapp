@@ -107,6 +107,11 @@ img.uudis-pilt {
 }
 
 
+.yks-uudis h4 {
+    font-size: 25px;
+    color: rgb(0, 89, 255);
+}
+
 @media screen and (min-width: 992px) {
     .paisSektsioon-pealkirjad {
         padding-top: 231px;
