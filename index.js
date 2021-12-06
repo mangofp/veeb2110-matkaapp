@@ -1,6 +1,14 @@
 const express = require("express");
+const { MongoClient } = require("mongodb");
 const path = require("path");
 const PORT = process.env.PORT || 5000;
+
+
+const salasona = "HerneSupp12"
+const andmebaas = "matkaApp"
+const mongoUrl = `mongodb+srv://matka-app:${salasona}@cluster0.9x3tf.mongodb.net/${andmebaas}?retryWrites=true&w=majority`
+
+const client = new MongoClient(mongoUrl)
 
 const matk1 = {
   id: 0,
@@ -8,8 +16,8 @@ const matk1 = {
   kirjeldus: "Lähme ja kõnnime kolm päeva looduses",
   pildiUrl: "/assets/matk_tartus1.jpg",
   osalejad: [],
-  kasNahtav: false,
-  kasRegistreeumineAvatud: true
+  kasNahtav: true,
+  kasRegistreeumineAvatud: false
 };
 const matk2 = {
   id: 1,
@@ -81,22 +89,29 @@ let uudised = [
   }
 ]
 
-function registreerumiseKinnitus(req, res) {
+async function registreerumiseKinnitus(req, res) {
     console.log(req.query.nimi)
     if (!req.query.email) {
       res.end("Emaili ei ole - registreerumine ebaõnnestus")
       return false
     }
 
+    const matk = matkad[req.params.matkaId]
+
     const registreerumine = {
+      matkId: matk.id,
       nimi: req.query.nimi,
       email: req.query.email,
       markus: req.query.markus
     }
 
-    const matk = matkad[req.params.matkaId]
     matk.osalejad.push(registreerumine)
 
+    await client.connect()
+    const database = client.db(andmebaas)
+    const registreerumised = database.collection("registreerumised")
+    const tulemus = await registreerumised.insertOne(registreerumine)
+    console.log(`Lisati registreerumine idd-ga: ${tulemus.insertedId}`)
     res.end(`Registreeruti matkale`)
 }
 
@@ -119,7 +134,79 @@ function tagastaMatkad(req, res) {
   res.send(matkad)
 }
 
+function tagastaUudised(req, res) {
+  res.send(uudised)
+}
+
+function muudaMatka(req, res) {
+  const matk = matkad[req.params.matkaId]
+  if (req.query.avatud != undefined) {
+    matk.kasRegistreeumineAvatud = (req.query.avatud === 'true')
+  }
+
+  if (req.query.nahtav != undefined) {
+    matk.kasNahtav = (req.query.nahtav === 'true')
+  }
+
+  if (req.query.nimetus != undefined) {
+    matk.nimetus = req.query.nimetus
+  }
+
+  if (req.query.piltUrl != undefined) {
+    matk.piltUrl = req.query.piltUrl
+  }
+  
+  if (req.query.kirjeldus != undefined) {
+    matk.kirjeldus = req.query.kirjeldus
+  }
+
+  console.log(matk)
+  res.send(matk)
+}
+function muudaUudist(req, res) {
+  const uudis = uudised[req.params.uudisIndeks]
+  if (req.query.pealkiri != undefined) {
+    uudis.pealkiri = (req.query.pealkiri)
+  }
+
+  console.log(uudis)
+  res.send(uudis)
+}
+
+async function loeRegistreerumised(matkId) {
+  await client.connect()
+  const database = client.db(andmebaas)
+  const registreerumised = database.collection("registreerumised")
+
+  let filter = {}
+
+  if (matkId !== undefined) {
+    filter = {matkId: parseInt(matkId)}
+  }
+
+  console.log(filter)
+
+  const tulemus = await registreerumised.find(filter).toArray()  
+  client.close()
+  return tulemus
+}
+
+async function tagastaRegistreerumised(req, res) {
+  const andmed = await loeRegistreerumised(req.params.matkId)
+  res.send(andmed)
+}
+
+async function lisaOsalejadMatkadele() {
+  for (matkId in matkad) {
+    const matk = matkad[matkId]
+    const osalejad = await loeRegistreerumised(matk.id)
+    matk.osalejad = osalejad
+  }
+}
+
 const app = express();
+lisaOsalejadMatkadele()
+
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -135,5 +222,11 @@ app.get("/registreerumine/:matkaId",
 app.get("/kinnitus/:matkaId", registreerumiseKinnitus)
 app.get("/uudis/:uudisIndeks", naitaUudist)
 app.get("/api/matk", tagastaMatkad)
+app.get("/api/uudis", tagastaUudised)
+app.get("/api/matk/:matkaId/muuda", muudaMatka)
+app.get("/api/uudis/:uudisIndeks/muuda", muudaUudist)
+app.get("/api/registreerumised", tagastaRegistreerumised)
+app.get("/api/registreerumised/:matkId", tagastaRegistreerumised)
+
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
