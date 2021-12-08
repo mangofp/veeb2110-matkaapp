@@ -42,6 +42,18 @@ function naitaMatkadeMenyyd(matkad) {
         `
     }
 
+    vastus += `
+    <button class="btn btn-link" onclick="naitaUudiseLisamist()">
+        Lisa uudis
+    </button>
+    `
+    
+    vastus += `
+    <button class="btn btn-link" onclick="naitaMatkaLisamist()">
+        Lisa matk
+    </button>
+    `
+
     const menyyElement = document.getElementById("matkad-menyy")
     menyyElement.innerHTML = `
     <div>
@@ -116,6 +128,106 @@ function naitaOsalejaid(matkaId) {
     `
 }
 
+function naitaUudiseLisamist() {
+    const uusUudisHtml = `
+    <h1>Uus uudis</h1>
+    <input type="text" placeholder="pealkiri" id="pealkiri"/>
+    <input type="text" placeholder="pildiUrl" id="pildiUrl"/>
+    <div>
+    <label>Kokkuvõte</label><br>
+    <textarea id="kokkuvote" cols="50" rows="2"></textarea>
+    </div>
+    <div>
+    <label>Tekst</label><br>
+    <textarea id="tekst" cols="50" rows="10"></textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="lisaUudis()">
+            Lisa
+        </button>
+    </div>
+
+    `
+    document.getElementById("matka-andmed").innerHTML = uusUudisHtml
+}
+
+function naitaMatkaLisamist() {
+    const uusUudisHtml = `
+    <h1>Lisa makt</h1>
+    <input type="text" placeholder="nimetus" id="nimetus"/>
+    <input type="text" placeholder="pildiUrl" id="pildiUrl"/>
+    <div>
+    <div>
+    <label>Kirjeldus</label><br>
+    <textarea id="kirjeldus" cols="50" rows="10"></textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="lisaMatk()">
+            Lisa
+        </button>
+    </div>
+
+    `
+    document.getElementById("matka-andmed").innerHTML = uusUudisHtml
+}
+
+async function lisaUudis() {
+    const nimetus = document.getElementById("pealkiri").value
+    const pildiUrl = document.getElementById("pildiUrl").value
+    const kokkuvote = document.getElementById("kokkuvote").value
+    const tekst = document.getElementById("tekst").value
+    const uudis = {
+        pealkiri: nimetus,
+        pildiUrl: pildiUrl,
+        kokkuvote: kokkuvote,
+        tekst: tekst
+    }
+    console.log(uudis)
+    const vastus = await fetch('/api/uudis', {
+        method: 'POST',
+        headers:  {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(uudis) 
+    })
+    if (vastus.ok) {
+        document.getElementById("matka-andmed").innerHTML = `
+        <div>
+            <h2>Uudis lisatud</h2>
+        </div>
+        `
+    }
+}
+
+async function lisaMatk() {
+    const nimetus = document.getElementById("nimetus").value
+    const pildiUrl = document.getElementById("pildiUrl").value
+    const kirjeldus = document.getElementById("kirjeldus").value
+    const matk = {
+        nimetus,
+        pildiUrl: pildiUrl,
+        kirjeldus,
+        kasNahtav: false,
+        kasRegistreeumineAvatud: false
+    }
+    console.log(matk)
+    const vastus = await fetch('/api/matk', {
+        method: 'POST',
+        headers:  {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(matk) 
+    })
+    if (vastus.ok) {
+        document.getElementById("matka-andmed").innerHTML = `
+        <div>
+            <h2>Matk lisatud</h2>
+        </div>
+        `
+    }
+}
 
 async function  naitaUudised() {
     const vastus = await fetch('/api/uudis')
